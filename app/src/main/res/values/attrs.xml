@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MTitle">
+        <attr name="center_textSize" format="dimension"/>
+        <attr name="left_textSize" format="dimension"/>
+        <attr name="right_textSize" format="dimension"/>
+        <attr name="center_textColor" format="color"/>
+        <attr name="left_textColor" format="color"/>
+        <attr name="right_textColor" format="color"/>
+        <attr name="center_text" format="string"/>
+        <attr name="left_text" format="string"/>
+        <attr name="right_text" format="string"/>
+        <attr name="left_img" format="reference"/>
+        <attr name="right_img" format="reference"/>
+        <attr name="center_img" format="reference"/>
+        <attr name="leftMargin" format="dimension"/>
+        <attr name="rightMaring" format="dimension"/>
+        <attr name="topPadding" format="dimension"/>
+        <attr name="bottomPadding" format="dimension"/>
+        <attr name="elevation" format="dimension"/>
+        <attr name="color" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="TagFlowLayout">
+        <attr name="max_select" format="integer"></attr>
+        <attr name="tag_gravity">
+            <enum name="left" value="-1" />
+            <enum name="center" value="0" />
+            <enum name="right" value="1" />
+        </attr>
+    </declare-styleable>
+
+
+    <declare-styleable name="MapView">
+        <attr name="map_background" format="reference" />
+        <attr name="slide_background" format="reference|string" />
+    </declare-styleable>
+</resources>

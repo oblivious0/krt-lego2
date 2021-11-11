@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieAnimationView"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="120dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.daimajia.numberprogressbar.NumberProgressBar
+            android:id="@+id/progressBar"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@id/loadText"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            custom:progress_unreached_color="@color/colorAccent"
+            custom:progress_reached_color="@color/colorPrimary"
+            custom:progress_unreached_bar_height="0.75dp"
+            custom:progress_reached_bar_height="1.5dp"
+            custom:progress_text_size="10sp"
+            custom:progress_text_color="@color/colorPrimaryDark"
+            custom:progress_text_offset="1dp"
+            custom:progress_text_visibility="visible"
+            custom:progress_max="100"
+            custom:progress_current="0" />
+
+        <TextView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/loadText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/dp25"
+            android:text="加载中..." />
+
+    </RelativeLayout>
+
+
+
+
+
+
+
+</RelativeLayout>

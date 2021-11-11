@@ -1,0 +1,4 @@
+rootProject.name='lego2'
+include ':app'
+include ':simple'
+include ':buried'

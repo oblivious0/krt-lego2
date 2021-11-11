@@ -1,0 +1,125 @@
+<resources>
+    <string name="app_name">krt-lego</string>
+    <string name="error_please_check_network">网络连接失败,请检查网络！</string>
+    <string name="error_json">数据解析异常！</string>
+    <string name="error_timeout">请求超时，网络不好或者服务器不稳定！</string>
+    <string name="error_not_found_server">服务器请求失败,请重试</string>
+    <string name="error_url_error">URL错误！</string>
+    <string name="error_not_found_cache">没有找到缓存.</string>
+    <string name="error_unknow">数据获取失败,请重试！</string>
+    <string name="error_response_code">服务器响应码%1$d</string>
+    <string name="error_response_code_dex">服务器响应码%1$d，如果你们服务器在这种情况下也返回数据你可以处理。</string>
+    <string name="error_gif">x or y bound size should be at least %1$dpx and file size should be no more than %2$sM</string>
+    <string name="error_compress">压缩失败,请重试。</string>
+    <!-- Download error -->
+    <string name="download_error">下载出错了：%1$s</string>
+    <string name="download_error_server">服务器数据错误！</string>
+    <string name="download_error_network">网络不可用，请检查网络！</string>
+    <string name="download_error_storage">存储卡错误，请检查存储卡！</string>
+    <string name="download_error_space">存储卡空间不足！</string>
+    <string name="download_error_timeout">下载超时！</string>
+    <string name="download_error_un_know_host">找不到服务器。</string>
+    <string name="download_error_url">URL地址错误。</string>
+    <string name="download_error_un">未知错误。</string>
+
+
+    <string name="message_permission_always_failed">请前往设置,开启相关权限s:\n\n%1$s</string>
+
+    <string name="download_ticker">正在下载中...</string>
+    <string name="download_progress">下载进度:%d%%/100%%</string>
+    <string name="download_finish">下载完成,点击安装</string>
+    <string name="download_fail">下载失败,请重试</string>
+
+    <style name="LoadingDialog">
+        <item name="minWidth">40dip</item>
+        <item name="maxWidth">40dip</item>
+        <item name="minHeight">40dip</item>
+        <item name="maxHeight">40dip</item>
+    </style>
+
+    <style name="LoadingFoot">
+        <item name="minWidth">35dip</item>
+        <item name="maxWidth">35dip</item>
+        <item name="minHeight">35dip</item>
+        <item name="maxHeight">35dip</item>
+    </style>
+
+    <style name="MProgress" parent="Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progress</item>
+    </style>
+
+    <style name="progressDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.6</item>
+    </style>
+    <item name="cid" type="id"></item>
+    <item name="pid" type="id"></item>
+    <item name="pageId" type="id"></item>
+    <string name="gravity_left">left</string>
+    <string name="gravity_center">center</string>
+    <string name="gravity_right">right</string>
+
+    <color name="bg_gray">#ecedef</color>
+    <color name="checkbox_color">#FB4846</color>
+    <color name="checkbox_unchecked_color">#DFDFDF</color>
+    <color name="row_active">#efefef</color>
+    <color name="search_icon_color">@android:color/white</color>
+    <color name="transparent_black">#94333232</color>
+    <dimen name="file_icon_height">40dp</dimen>
+    <dimen name="file_icon_width">40dp</dimen>
+    <dimen name="file_item_checkbox_size">22dp</dimen>
+    <dimen name="file_name_textSize">17sp</dimen>
+    <drawable name="tab_gray">@color/bg_gray</drawable>
+    <drawable name="tab_white">@android:color/white</drawable>
+    <string name="action_settings">Settings</string>
+    <string name="all_files">All Files</string>
+    <string name="all_images">All Images</string>
+    <string name="all_photos">All Photos</string>
+    <string name="all_videos">All Videos</string>
+    <string formatted="false" name="attachments_num">%d</string>
+    <string formatted="false" name="attachments_title_text">(%d/%d)</string>
+    <string name="done">Done</string>
+    <string name="excel_title">XLS</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="images">Images</string>
+    <string name="no_camera_exists">No Application exists for camera!</string>
+    <string name="no_files_found">No Files Found</string>
+    <string name="pdf_title">PDF</string>
+    <string name="permission_filepicker_rationale">Storage permission is needed to access files.</string>
+    <string name="ppt_title">PPT</string>
+    <string name="select_doc_text">Select a document</string>
+    <string name="select_photo_text">Select a media</string>
+    <string name="txt_title">TXT</string>
+    <string name="videos">Videos</string>
+    <string name="word_title">DOC</string>
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    <style name="LibAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@android:color/background_light</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+    <style name="SmoothCheckBoxStyle">
+        <item name="color_checked">@color/checkbox_color</item>
+        <item name="color_unchecked">@android:color/white</item>
+        <item name="color_unchecked_stroke">@color/checkbox_unchecked_color</item>
+        <item name="color_tick">@android:color/white</item>
+    </style>
+    <declare-styleable name="SmoothCheckBox">
+        <attr format="integer" name="duration"/>
+        <attr format="dimension" name="stroke_width"/>
+        <attr format="color" name="color_tick"/>
+        <attr format="color" name="color_checked"/>
+        <attr format="color" name="color_unchecked"/>
+        <attr format="color" name="color_unchecked_stroke"/>
+    </declare-styleable>
+
+</resources>
