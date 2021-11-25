@@ -61,7 +61,7 @@ public class RadioView extends BaseWidget<FrameLayout> {
                 }
             }
             if (!isVal) {
-                style_1.put("val", list.get(0).getCode());
+                changeStyle("val", list.get(0).getCode());
                 list.get(0).setRadioFlag(true);
             }
             myAdapter = new MyAdapter(list);
@@ -75,7 +75,7 @@ public class RadioView extends BaseWidget<FrameLayout> {
                             myAdapter.notifyItemChanged(i);
                         }
                     }
-                    style_1.put("val", myAdapter.getData().get(position).getCode());
+                    changeStyle("val", myAdapter.getData().get(position).getCode());
                     myAdapter.getData().get(position).setRadioFlag(true);
                     myAdapter.notifyItemChanged(position);
 

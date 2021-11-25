@@ -45,7 +45,7 @@ public class CircleProgressBarView extends BaseWidget<DonutProgress> {
                     }
                     break;
             }
-            style_1.put(key,val);
+            changeStyle(key,val);
         }
     }
 }

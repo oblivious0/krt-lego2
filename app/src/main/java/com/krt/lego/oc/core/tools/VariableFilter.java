@@ -213,4 +213,20 @@ public class VariableFilter {
         }
         return "";
     }
+
+    /**
+     * 转换Intent传值
+     *
+     * @param objects
+     * @return
+     */
+    public static List<ParamBean> convert(HashMap<String, String> objects) {
+        List<ParamBean> params = new ArrayList<>();
+        for (String key : objects.keySet()) {
+            ParamBean param = new ParamBean();
+            param.setKey(key);
+            param.setVal(objects.get(key));
+        }
+        return params;
+    }
 }

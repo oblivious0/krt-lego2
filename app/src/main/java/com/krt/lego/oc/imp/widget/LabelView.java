@@ -110,7 +110,7 @@ public class LabelView extends BaseWidget<TextView> {
     @Override
     public void bindData(String cid, String key, Object val) {
         if (cid.equals(this.cid)){
-            style_1.put(key, val);
+            changeStyle(key, val);
             initView();
         }
     }

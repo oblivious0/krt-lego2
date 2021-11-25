@@ -121,11 +121,11 @@ public class PicView extends BaseWidget<ImageView> {
             switch (key) {
                 case "src":
                     //要确认这次修改的网络图片被使用
-                    style_1.put("isIcon", false);
+                    changeStyle("isIcon", false);
                     break;
                 default:
             }
-            style_1.put(key, val);
+            changeStyle(key, val);
         }
         initView();
     }

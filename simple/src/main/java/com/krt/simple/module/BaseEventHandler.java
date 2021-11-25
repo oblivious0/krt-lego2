@@ -13,6 +13,7 @@ import com.krt.lego.oc.core.tools.VariableFilter;
 import com.krt.simple.ui.ZxingActivity;
 import com.krt.simple.web.WebActivity;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,17 +25,12 @@ public class BaseEventHandler extends EventHandler {
 
 
     @Override
-    protected void sharePage(Subgrade subgrade, String url, String icon, List<ParamBean> objects) {
-        MToast.showToast(subgrade.getCarrier(), "未集成sdk");
-    }
-
-    @Override
     protected void gotoLogin(Context context) {
         MToast.showToast(context, "此处跳转原生登录页");
     }
 
     @Override
-    protected void onClickListener(Subgrade subgrade, String type, List<ParamBean> objects) {
+    protected void onClickListener(Subgrade subgrade, String type, HashMap<String,String> objects) {
         switch (type) {
             case "qrcode":
                 subgrade.getCarrier().startActivity(new Intent(subgrade.getCarrier(), ZxingActivity.class));
@@ -46,17 +42,17 @@ public class BaseEventHandler extends EventHandler {
     }
 
     @Override
-    protected void onStartWebActivity(Subgrade subgrade, String url, List<ParamBean> objects) {
+    protected void onStartWebActivity(Subgrade subgrade, String url, HashMap<String,String> objects) {
         Intent intent = new Intent(subgrade.getCarrier(), WebActivity.class)
                 .putExtra("url", url);
         subgrade.getCarrier().startActivity(intent);
     }
 
     @Override
-    protected void onStartModuleActivity(Subgrade subgrade, String jsonName, List<ParamBean> objects) {
+    protected void onStartModuleActivity(Subgrade subgrade, String jsonName, HashMap<String,String> objects) {
         Intent intent = new Intent(subgrade.getCarrier(), ModuleActivity.class)
                 .putExtra("name", jsonName)
-                .putExtra("param", ParseJsonUtil.toJson(VariableFilter.filter(subgrade, objects)));
+                .putExtra("param", ParseJsonUtil.toJson(VariableFilter.convert(objects)));
         subgrade.getCarrier().startActivity(intent);
     }
 

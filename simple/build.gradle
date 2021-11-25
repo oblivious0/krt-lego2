@@ -1,21 +1,40 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias project.KEY_ALIAS
+            keyPassword project.KEY_PASSWORD
+            storeFile file(project.STORE_FILE)
+            storePassword project.STORE_PASSWORD
+        }
+    }
+
     compileSdkVersion 30
     buildToolsVersion "29.0.2"
 
     defaultConfig {
-        applicationId "com.krt.simple"
+        applicationId project.APPLICATION_ID
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
-
+        versionCode project.APP_VERSION_CODE as int
+        versionName project.APP_VERSION_NAME
+        resValue("string", "pid", "1")
+        resValue("string", "andmin", project.BUILD_PATH)
     }
 
     buildTypes {
         release {
+            shrinkResources true
+            minifyEnabled true
+            signingConfig signingConfigs.config
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
             minifyEnabled false
+            signingConfig signingConfigs.config
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,11 +44,38 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def fileName
+            if (project.IS_JENKINS.equals("ture")) {
+                fileName = "${defaultConfig.applicationId}_JenkinsV${defaultConfig.versionName}_${buildTime()}.apk"
+            } else {
+                fileName = "${defaultConfig.applicationId}_v${defaultConfig.versionName}_${millis()}.apk"
+            }
+            outputFileName = fileName
+        }
+    }
+
+}
+
+def millis() {
+    return System.currentTimeMillis()
+}
+
+def buildTime() {
+    def df = new SimpleDateFormat("yyyyMMdd hhmm")
+    df.setTimeZone(TimeZone.getDefault())
+    return df.format(new Date())
 }
 
 configurations {
     cleanedAnnotations
-    compile.exclude group: 'org.jetbrains' , module:'annotations'
+    compile.exclude group: 'org.jetbrains', module: 'annotations'
+}
+
+repositories {
+    mavenCentral()
+    flatDir { dirs 'libs' }
 }
 
 dependencies {

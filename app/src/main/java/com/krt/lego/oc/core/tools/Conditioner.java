@@ -28,7 +28,7 @@ public class Conditioner {
     public static boolean judge(StyleLinkBean bean, Object data, Subgrade subgrade) {
         for (StateMentBean stateMent : bean.getStateMent()) {
             if (!judgeStateMent(stateMent, data, subgrade)) {
-                //多个stateMent关系是 且， 当其中一项出现false中止判断并返回
+                //多个stateMent关系是 且，当其中一项出现false中止判断并返回
                 return false;
             }
         }

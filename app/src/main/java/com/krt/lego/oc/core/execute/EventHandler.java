@@ -5,9 +5,12 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.CloneUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.krt.base.util.MToast;
 import com.krt.base.xshare.ShareInfo;
 import com.krt.base.xshare.ShareUtil;
@@ -23,12 +26,14 @@ import com.krt.lego.oc.core.tools.EventMessageWarp;
 import com.krt.lego.oc.core.tools.VariableFilter;
 import com.krt.lego.oc.util.ParamUtil;
 import com.krt.lego.oc.util.TerminalUtil;
+import com.youth.banner.Banner;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -40,47 +45,48 @@ public abstract class EventHandler {
 
     public void onViewClick(BaseWidget baseView, List<EventBean> eventBeans) {
         for (final EventBean eventBean : eventBeans) {
-            EventBean eventBean1 = CloneUtils.deepClone(eventBean, EventBean.class);
-            List<ParamBean> paramBeans = new ArrayList<>();
-            //判断参数集是否为空，不为空将遍历参数集，把传出值替换为实际数据；
-            if (eventBean.getParams() != null) {
-                paramBeans = (VariableFilter.filter(baseView.getDependent(), eventBean.getParams()));
-            }
-            eventBean1.setParams(paramBeans);
-            action(baseView.getDependent(), eventBean1);
+//            EventBean eventBean1 = CloneUtils.deepClone(eventBean, EventBean.class);
+//            List<ParamBean> paramBeans = new ArrayList<>();
+//            //判断参数集是否为空，不为空将遍历参数集，把传出值替换为实际数据；
+//            if (eventBean.getParams() != null) {
+//                paramBeans = (VariableFilter.filter(baseView.getDependent(), eventBean.getParams()));
+//            }
+//            eventBean1.setParams(paramBeans);
+            action(baseView.getDependent(), eventBean,null);
         }
     }
 
     public void onDataListClick(BaseWidget baseView, List<EventBean> eventBeans, int position) {
         Object json = new Object();
 
-//        if (baseView.getRawView() instanceof MRecyclerView) {
-//            RecyclerView recyclerView = (RecyclerView) baseView.getRawView();
-//
-//            if (baseView.type.equals("waterfall") && position == 0) {
-//                if (!TextUtils.isEmpty(baseView.bean.getCommon().getLeftSpaceId())) {
-//                    return;
-//                }
-//            }
-//
-//            try {
-//                BaseQuickAdapter<Object, BaseViewHolder> adapter =
-//                        (BaseQuickAdapter<Object, BaseViewHolder>) recyclerView.getAdapter();
-//                json = adapter.getData().get(position);
-//            } catch (Exception e) {
-//                return;
-//            }
-//        } else if (baseView.getRawView() instanceof Banner) {
-//            Banner banner = (Banner) baseView.getRawView();
-//            try {
-//                json = banner.getAdapter().getData(position);
-//            } catch (Exception e) {
-//                return;
-//            }
-//        }
-//
-//
-//        for (EventBean eventBean : eventBeans) {
+        if (baseView.getRawView() instanceof RecyclerView) {
+            RecyclerView recyclerView = (RecyclerView) baseView.getRawView();
+
+            if (baseView.type.equals("waterfall") && position == 0) {
+                if (!TextUtils.isEmpty(Optional.ofNullable
+                        (baseView.getAttr("leftSpaceId").toString()).orElse(""))) {
+                    return;
+                }
+            }
+
+            try {
+                BaseQuickAdapter<Object, BaseViewHolder> adapter =
+                        (BaseQuickAdapter<Object, BaseViewHolder>) recyclerView.getAdapter();
+                json = adapter.getData().get(position);
+            } catch (Exception e) {
+                return;
+            }
+        } else if (baseView.getRawView() instanceof Banner) {
+            Banner banner = (Banner) baseView.getRawView();
+            try {
+                json = banner.getAdapter().getData(position);
+            } catch (Exception e) {
+                return;
+            }
+        }
+
+
+        for (EventBean eventBean : eventBeans) {
 //            EventBean eventBean1 = CloneUtils.deepClone(eventBean, EventBean.class);
 //            if (eventBean1.isUrlFromApi()) {
 //                // data%krt_Array%krt_linkUrl
@@ -93,11 +99,11 @@ public abstract class EventHandler {
 //                    (baseView.getDependent(), eventBean.getParams(), json);
 //            //判断参数集是否为空，不为空将遍历参数集，把传出值替换为实际数据；
 //            eventBean1.setParams(paramBeans);
-//            action(baseView.getDependent(), eventBean1);
-//        }
+            action(baseView.getDependent(), eventBean, json);
+        }
     }
 
-    private void action(Subgrade subgrade, EventBean eventBean) {
+    private void action(Subgrade subgrade, EventBean eventBean, Object json) {
 
         if (eventBean.isNeedLogin() && !LegoGlobal.isUserLogin()) {
             //处于需要登录的情况下切未登录的状态返回
@@ -110,7 +116,9 @@ public abstract class EventHandler {
             return;
         }
 
-        execute(subgrade, eventBean);
+        HashMap<String, String> obj =  VariableFilter.filterParam
+                (subgrade, eventBean.getParams(), json);
+        execute(subgrade, eventBean, obj);
     }
 
     /**
@@ -118,7 +126,7 @@ public abstract class EventHandler {
      *
      * @param subgrade
      */
-    public void execute(Subgrade subgrade, EventBean eventBean) {
+    public void execute(Subgrade subgrade, EventBean eventBean, HashMap<String, String> obj) {
 
         if (eventBean.isIfToMp()) {
             jumpWx(subgrade, eventBean.getAppId(), eventBean.getUrl());
@@ -137,7 +145,7 @@ public abstract class EventHandler {
         try {
             switch (eventBean.getType()) {
                 case EventMessageWarp.NAVIGATOR:
-                    navigator(subgrade, eventBean);
+                    navigator(subgrade, eventBean, obj);
                     break;
                 case EventMessageWarp.SEND_AJAX:
                     sendAjax(subgrade, eventBean);
@@ -252,8 +260,7 @@ public abstract class EventHandler {
                     .setNegativeButton("确定", (dialogInterface, i) -> {
                         if (eventBean.getConfirmEv() != null) {
                             for (String cid : eventBean.getConfirmEv()) {
-                                execute(subgrade,
-                                        (EventBean) subgrade.getDesigner().orders.get(cid));
+                                action(subgrade, subgrade.getDesigner().orders.get(cid),null);
                             }
                         }
                         dialogInterface.dismiss();
@@ -407,7 +414,7 @@ public abstract class EventHandler {
      * @param subgrade
      * @param eventBean
      */
-    private void navigator(Subgrade subgrade, EventBean eventBean) {
+    private void navigator(Subgrade subgrade, EventBean eventBean, HashMap params) {
         if (!TextUtils.isEmpty(eventBean.getNaviType()) && eventBean.getNaviType().equals("navigateBack")) {
             ((Activity) subgrade.getCarrier()).finish();
             return;
@@ -415,11 +422,11 @@ public abstract class EventHandler {
 
         if (eventBean.isIfOuterChain()) {
             String url = disposeUrl(eventBean.getUrl(), eventBean.getDevelopment());
-            onStartWebActivity(subgrade, url, eventBean.getParams());
+            onStartWebActivity(subgrade, url, params);
         } else if (eventBean.isIfModulePage() && !eventBean.isIfOuterChain()) {
-            onStartModuleActivity(subgrade, eventBean.getPageId(), eventBean.getParams());
+            onStartModuleActivity(subgrade, eventBean.getPageId(), params);
         } else {
-            onClickListener(subgrade, eventBean.getUrl(), eventBean.getParams());
+            onClickListener(subgrade, eventBean.getUrl(), params);
         }
     }
 
@@ -440,37 +447,39 @@ public abstract class EventHandler {
                 break;
         }
 
-        List<ParamBean> paramBeans = ParamUtil.filterParam(subgrade, eventBean.getParams(), null);
-//        sharePage(subgrade, val, eventBean.getImage(), paramBeans);
-        ShareInfo info = new ShareInfo();
-        info.setDescription("");
-        info.setTitle(subgrade.getCarrier().getString(R.string.app_name));
-        info.setUrl(val);
-        info.setImgUrl(eventBean.getImage());
-        JSONObject jsonObject = new JSONObject();
-        //itemType: 'click',itemCode: '2',itemName: '通用分享',
-        jsonObject.put("itemType", "share");
-        jsonObject.put("itemCode", 2);
-        jsonObject.put("itemName", "通用分享");
-        jsonObject.put("tranSource", "");
-        jsonObject.put("tranUrl", "val");
-        ShareUtil shareUtil = new ShareUtil(subgrade.getCarrier(), info, jsonObject.toJSONString());
-        shareUtil.init();
+        HashMap<String, String> paramBeans = VariableFilter.filterParam(subgrade, eventBean.getParams(), null);
+        sharePage(subgrade, val, eventBean.getImage(), paramBeans);
+
 
     }
 
     /**
      * 实现分享事件
      */
-    protected abstract void sharePage(Subgrade subgrade, String url, String icon, List<ParamBean> objects);
+    protected void sharePage(Subgrade subgrade, String url, String icon, HashMap objects) {
+        ShareInfo info = new ShareInfo();
+        info.setDescription("");
+        info.setTitle(subgrade.getCarrier().getString(R.string.app_name));
+        info.setUrl(url);
+        info.setImgUrl(icon);
+        JSONObject jsonObject = new JSONObject();
+        //itemType: 'click',itemCode: '2',itemName: '通用分享',
+        jsonObject.put("itemType", "share");
+        jsonObject.put("itemCode", 2);
+        jsonObject.put("itemName", "通用分享");
+        jsonObject.put("tranSource", "");
+        jsonObject.put("tranUrl", url);
+        ShareUtil shareUtil = new ShareUtil(subgrade.getCarrier(), info, jsonObject.toJSONString());
+        shareUtil.init();
+    }
 
     protected abstract void gotoLogin(Context context);
 
-    protected abstract void onClickListener(Subgrade subgrade, String type, List<ParamBean> objects);
+    protected abstract void onClickListener(Subgrade subgrade, String type, HashMap<String,String> objects);
 
-    protected abstract void onStartWebActivity(Subgrade subgrade, String url, List<ParamBean> objects);
+    protected abstract void onStartWebActivity(Subgrade subgrade, String url, HashMap<String,String> objects);
 
-    protected abstract void onStartModuleActivity(Subgrade subgrade, String jsonName, List<ParamBean> objects);
+    protected abstract void onStartModuleActivity(Subgrade subgrade, String jsonName, HashMap<String,String> objects);
 
     protected abstract void onCallPhone(Subgrade subgrade, String number);
 

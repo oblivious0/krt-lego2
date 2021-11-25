@@ -58,8 +58,7 @@ public abstract class BaseWidget<T extends View> {
      * 组件初始化配置实例
      */
     protected BaseLayoutBean bean;
-
-    protected JSONObject style_1;
+    private JSONObject style_1;
     private JSONObject style_2;
 
     protected Object data;
@@ -103,8 +102,14 @@ public abstract class BaseWidget<T extends View> {
         return view;
     }
 
+    /**
+     * 组件创建和初始化流程
+     */
     protected abstract void createView();
 
+    /**
+     * 组件在容器中的位置设置
+     */
     protected void setViewPoi() {
 
         if (TextUtils.isEmpty(getStringVal("ftype"))) {
@@ -198,6 +203,10 @@ public abstract class BaseWidget<T extends View> {
         }
     }
 
+    /**
+     * 匹配对应端的可执行事件
+     * @return
+     */
     public List<EventBean> matchingEvent() {
         List<EventBean> events = new ArrayList<>();
         if (bean.getEvent() != null) {

@@ -70,7 +70,7 @@ public class LayoutView extends BaseWidget<ShadowLayout> {
     @Override
     public void bindData(String cid, String key, Object val) {
         if (cid.equals(this.cid)) {
-            style_1.put(key, val);
+            changeStyle(key, val);
         }
         if (childViews.size() != 0) {
             for (BaseWidget baseV : childViews) {

@@ -12,6 +12,7 @@ import com.krt.lego.oc.core.bean.BaseLayoutBean;
 import com.krt.lego.oc.core.bean.BindDataBean;
 import com.krt.lego.oc.core.bean.ProcessBean;
 import com.krt.lego.oc.core.bean.StateMentBean;
+import com.krt.lego.oc.core.bean.StaticDataBean;
 import com.krt.lego.oc.core.bean.StyleLinkBean;
 import com.krt.lego.oc.core.surface.BaseWidget;
 import com.krt.lego.oc.core.surface.Subgrade;
@@ -196,6 +197,44 @@ public class DataBinder {
         }
         return views;
     }
+
+    public static List<BaseWidget> bindMutiListData(Subgrade imp, FrameLayout frameLayout, List<BaseLayoutBean> children, Object item, StaticDataBean ajax) {
+        HashMap<String, BaseLayoutBean> styleContent = new HashMap<>();
+        for (BaseLayoutBean bean : children) {
+            if (bean.getType().equals("layout")) {
+                styleContent.put(bean.getCid(), bean);
+            }
+        }
+
+        List<ProcessBean> processes = ajax.getProcess();
+        List<StyleLinkBean> links = ajax.getStyleLink();
+
+        //先过滤样式
+        String layoutCid = getMutiBindCid(links, styleContent.keySet().iterator().next(), item, imp);
+        BaseLayoutBean layout = styleContent.get(layoutCid);
+        //重置定位
+        JSONObject poi = JSON.parseObject(JSON.toJSONString(layout.getCommon()));
+        poi.put("x", 0);
+        poi.put("y", 0);
+        layout.setCommon(poi);
+        //再生产组件
+        List<BindDataBean> bindDatas = ajax.getBindData();
+        List<BaseWidget> views = new ArrayList<>();
+        frameLayout.removeAllViews();
+
+        ModuleViewFactory.createViews(Arrays.asList(layout), imp, frameLayout, views, true, item);
+        //再组件绑定数据
+        for (BaseWidget baseV : views) {
+            for (int j = 0; j < bindDatas.size(); j++) {
+                DataBinder util = new DataBinder(bindDatas.get(j).getOriginKey());
+                String val = VariableFilter.getProperty(bindDatas.get(j).getBindKeys(), item);
+                baseV.bindData(util.getCid(), util.getViewProperty(),
+                        VariableFilter.map(val, util.getViewProperty(), processes));
+            }
+        }
+        return views;
+    }
+
 
     private static String getMutiBindCid(List<StyleLinkBean> links, String def, Object data, Subgrade subgrade) {
         for (StyleLinkBean bean : links) {
