@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.blankj.utilcode.util.ThreadUtils;
 import com.daimajia.numberprogressbar.NumberProgressBar;
 import com.krt.base.base.MBaseActivity;
 import com.krt.base.util.MPermissions;
@@ -64,6 +65,7 @@ public class LoadActivity extends MBaseActivity implements ZLoader.LoaderListene
                 .appendJumpingDots()
                 .build();
         progressBar = findViewById(R.id.progressBar);
+        progressBar.setMax(100);
     }
 
     @Override
@@ -102,7 +104,7 @@ public class LoadActivity extends MBaseActivity implements ZLoader.LoaderListene
 
     @Override
     public void progressBack(int max, int current) {
-        progressBar.setProgress((int) (((1.0f * max) / current) * 100));
+        ThreadUtils.runOnUiThread(() -> progressBar.setProgress((int) (((1.0f * max) / current) * 100)));
     }
 
     @Override

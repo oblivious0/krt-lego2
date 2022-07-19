@@ -1,6 +1,7 @@
 package com.krt.lego.oc.imp.surface;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import com.krt.lego.R;
 import com.krt.lego.config.LegoConfig;
 import com.krt.lego.oc.core.bean.BroadCastBean;
 import com.krt.lego.oc.core.surface.Blueprint;
+import com.krt.lego.oc.core.surface.ResultCodeObserver;
 import com.krt.lego.oc.core.surface.Subgrade;
 import com.krt.lego.oc.core.tools.BroadCastMessageWarp;
 import com.krt.lego.oc.lifecyler.MLifecycleObserver;
@@ -30,6 +32,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author: MaGua
@@ -44,6 +48,7 @@ public abstract class Lump extends Fragment implements Subgrade {
     protected Context mContext;
     protected boolean isPrepared = false;
     public View surfaceView;
+    private List<ResultCodeObserver> resultCodeObservers = new ArrayList<>();
 
     public Lump setJsonFile(String name) {
         this.jsonFile = name;
@@ -167,5 +172,18 @@ public abstract class Lump extends Fragment implements Subgrade {
         OkGo.getInstance().cancelTag(this);
         AppLibManager.unRegisterContext(jsonFile);
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        for (ResultCodeObserver observer : resultCodeObservers){
+            observer.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void addResultCodeObserver(ResultCodeObserver observer) {
+        this.resultCodeObservers.add(observer);
     }
 }

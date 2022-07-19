@@ -9,7 +9,7 @@ import com.krt.lego.oc.core.surface.Subgrade;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 11:41
- * @description
+ * @description 环形进度条
  */
 public class CircleProgressBarView extends BaseWidget<DonutProgress> {
 

@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 10:28
- * @description
+ * @description 天气组件
  */
 public class WeatherView extends BaseWidget<FrameLayout> {
 

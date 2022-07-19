@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author: MaGua
  * @create_on:2021/11/9 9:56
- * @description
+ * @description 滚动容器
  */
 public class ScrollLayoutView extends BaseWidget<HorizontalScrollView> {
 

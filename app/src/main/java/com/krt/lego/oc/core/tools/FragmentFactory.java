@@ -11,7 +11,7 @@ import java.lang.reflect.Method;
 /**
  * author: MaGua
  * create on:2021/5/4 11:43
- * description
+ * description Fragment工厂
  */
 public abstract class FragmentFactory {
     public Fragment manufactureModule(String pageId) {
@@ -36,5 +36,10 @@ public abstract class FragmentFactory {
         return new TestFragment();
     }
 
+    /**
+     * 由项目方通过标识指定示例Fragment
+     * @param sgin
+     * @return
+     */
     public abstract Fragment manufactureOrigin(String sgin);
 }

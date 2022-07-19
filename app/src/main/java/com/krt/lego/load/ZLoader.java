@@ -2,10 +2,12 @@ package com.krt.lego.load;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.blankj.utilcode.util.EncryptUtils;
 import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.FileUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPStaticUtils;
 import com.krt.Lego;
 import com.krt.base.net.Result;
@@ -28,6 +30,7 @@ import com.lzy.okgo.model.Response;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.WeakHashMap;
 
@@ -68,6 +71,7 @@ public class ZLoader {
      * 下载信息 K：保存文件名 V：下载路径
      */
     private WeakHashMap<String, String> downUrl = new WeakHashMap<>();
+    private ArrayList<String> downKey = new ArrayList();
 
     /**
      * 下载总进度（需要下载的文件总数量）
@@ -228,6 +232,7 @@ public class ZLoader {
             else
                 downUrl.put(SkinManager.defaultFile, info.getSkin().getCdnUrl());
 
+            downKey.add(SkinManager.defaultFile);
             FileUtils.deleteFilesInDir(Constants.iconPath);
         }
 
@@ -257,6 +262,7 @@ public class ZLoader {
                                     }
                                     FileUtils.createFileByDeleteOldFile(filePath);
                                     FileIOUtils.writeFileFromString(filePath, bean.getPage_config());
+
                                 }
                             }
                         }
@@ -279,12 +285,17 @@ public class ZLoader {
                         continue;
                     }
                 }
-                downUrl.put(jsonName, bean.getFileUrl());
+                if (!TextUtils.isEmpty(bean.getFileUrl())) {
+                    downUrl.put(jsonName, bean.getFileUrl());
+                    downKey.add(jsonName);
+                }
             }
 
             for (ApplicationVersionInfo.ResListBean bean : info.getResList()) {
-                if (!FileUtils.isFileExists(Constants.imgPath + bean.getFileName())) {
+                if (!FileUtils.isFileExists(Constants.imgPath + bean.getFileName()) &&
+                        !TextUtils.isEmpty(bean.getImageUrl())) {
                     downUrl.put(bean.getFileName(), bean.getImageUrl());
+                    downKey.add(bean.getFileName());
                 }
             }
             download();
@@ -295,73 +306,69 @@ public class ZLoader {
             String md5 = EncryptUtils.encryptMD5File2String(Constants.defPath + "version.json");
             if (md5.equals(EncryptUtils.encryptMD5ToString(versionJson))) return;
         }
-
         saveVersion(versionJson);
-
     }
 
+    /**
+     * 本次的版本信息保存至本地
+     * @param info
+     */
     private void saveVersion(String info) {
-
-        if (!FileUtils.createOrExistsDir(Constants.defPath)) {
-            return;
-        }
-
+        if (!FileUtils.createOrExistsDir(Constants.defPath)) return;
         FileOutputStream outputStream = null;
         try {
             File file = new File(Constants.defPath + "version.json");
             FileUtils.createFileByDeleteOldFile(file);
-            outputStream = new FileOutputStream(file);//形参里面可追加true参数，表示在原有文件末尾追加信息
+            outputStream = new FileOutputStream(file);
             outputStream.write(info.getBytes());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             try {
                 outputStream.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                outputStream = null;
             }
         }
     }
 
     @SuppressLint("CheckResult")
     private void download() {
-        maxProgress = downUrl.size();
-        currentProgress = 0;
-
+        maxProgress = downKey.size();
         if (maxProgress == 0) {
             finish(getVersionInfo().getAppInfo().getStartType(),
                     getVersionInfo().getAppInfo().getStartPageId());
             return;
         }
+        String path = Constants.imgPath;
 
-        //遍历map循环下载
-        Observable.fromIterable(downUrl.keySet())
-                .subscribe(s -> {
+        LogUtils.e(downKey.size(),downUrl.size());
 
-                    String path = Constants.imgPath;
-                    if (s.contains(LegoValue.JSON))
-                        path = Constants.jsonPath;
+        final String s = downKey.get(0);
+        if (s.equalsIgnoreCase(LegoValue.JSON))
+            path = Constants.jsonPath;
+        Log.i("download task ", downUrl.get(s));
+        OkGo.<File>get(downUrl.get(s))
+                .execute(new FileCallback(path, s) {
+                    @Override
+                    public void onSuccess(Response<File> response) { }
 
-                    OkGo.<File>get(downUrl.get(s))
-                            .execute(new FileCallback(path, s) {
-                                @Override
-                                public void onSuccess(Response<File> response) {
-
-                                }
-
-                                @Override
-                                public void onFinish() {
-                                    super.onFinish();
-                                    currentProgress++;
-                                    progressBack();
-                                    if (currentProgress == maxProgress) {
-                                        finish(getVersionInfo().getAppInfo().getStartType(),
-                                                getVersionInfo().getAppInfo().getStartPageId());
-                                    }
-                                }
-                            });
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        currentProgress++;
+                        downKey.remove(0);
+                        progressBack();
+                        if (currentProgress == maxProgress) {
+                            finish(getVersionInfo().getAppInfo().getStartType(),
+                                    getVersionInfo().getAppInfo().getStartPageId());
+                        } else {
+                            download();
+                        }
+                    }
                 });
-
     }
 
     /**

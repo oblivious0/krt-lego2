@@ -26,7 +26,7 @@ import java.util.Optional;
 /**
  * @author: MaGua
  * @create_on:2021/11/13 10:33
- * @description
+ * @description 常规列表组件
  */
 public class ListView extends ListWidget<RecyclerView> {
 

@@ -15,8 +15,8 @@ import android.widget.TextView;
  */
 public class JustifyTextView extends androidx.appcompat.widget.AppCompatTextView {
 
-    private int mLineY = 0;//总行高
-    private int mViewWidth;//TextView的总宽度
+    private int mLineY = 0;
+    private int mViewWidth;
     private TextPaint paint;
 
     public JustifyTextView(Context context) {
@@ -43,19 +43,19 @@ public class JustifyTextView extends androidx.appcompat.widget.AppCompatTextView
     @Override
     protected void onDraw(Canvas canvas) {
         mLineY = 0;
-        mViewWidth = getMeasuredWidth();//获取textview的实际宽度
+        mViewWidth = getMeasuredWidth();
         mLineY += getTextSize();
 
         String text = getText().toString();
 
         Layout layout = getLayout();
         int lineCount = layout.getLineCount();
-        for (int i = 0; i < lineCount; i++) {//每行循环
+        for (int i = 0; i < lineCount; i++) {
             int lineStart = layout.getLineStart(i);
             int lineEnd = layout.getLineEnd(i);
-            String lineText = text.substring(lineStart, lineEnd);//获取TextView每行中的内容
+            String lineText = text.substring(lineStart, lineEnd);
             if (needScale(lineText)) {
-                if (i == lineCount - 1) {//最后一行不需要重绘
+                if (i == lineCount - 1) {
                     canvas.drawText(lineText, 0, mLineY, paint);
                 } else {
                     float width = StaticLayout.getDesiredWidth(text, lineStart, lineEnd, paint);
@@ -64,7 +64,7 @@ public class JustifyTextView extends androidx.appcompat.widget.AppCompatTextView
             } else {
                 canvas.drawText(lineText, 0, mLineY, paint);
             }
-            mLineY += getLineHeight();//写完一行以后，高度增加一行的高度
+            mLineY += getLineHeight();
         }
     }
 

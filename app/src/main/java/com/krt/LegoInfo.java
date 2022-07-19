@@ -18,6 +18,6 @@ public final class LegoInfo {
     /**
      * 当前解析器端版本
      */
-    public final int terminal_version = 3;
+    public final int terminal_version = 2;
 
 }

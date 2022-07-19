@@ -43,9 +43,7 @@ public abstract class Main extends AppCompatActivity implements BottomLayout.Ins
     protected abstract void init();
 
     private void initViews() {
-
         FrameLayout frameLayout = findViewById(R.id.content);
-
         bottomLayout = new BottomLayout(this,
                 startCid + ".json", this);
         frameLayout.addView(bottomLayout);

@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 15:41
- * @description
+ * @description 单选按钮组件
  */
 public class RadioView extends BaseWidget<FrameLayout> {
 

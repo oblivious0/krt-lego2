@@ -20,7 +20,7 @@ import org.apmem.tools.layouts.FlowLayout;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 14:42
- * @description
+ * @description 边浮动标签群
  */
 public class TagView extends BaseWidget<FrameLayout> {
 

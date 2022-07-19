@@ -160,11 +160,6 @@ public class Blueprint {
             for (StateBean state : stateBeanList) {
                 String type = Optional.ofNullable(state.getType()).orElse("");
                 switch (type) {
-                    case "login":
-                    case "logout":
-                    case "show":
-                        iLifecycleEvent.visitEvent.add(state);
-                        break;
                     case "created":
                         iLifecycleEvent.createdEvent.add(state);
                         break;
@@ -172,6 +167,8 @@ public class Blueprint {
                         iLifecycleEvent.closedEvent.add(state);
                         break;
                     default:
+                        iLifecycleEvent.visitEvent.add(state);
+                        break;
                 }
             }
         }
@@ -280,9 +277,15 @@ public class Blueprint {
 
         }
 
+        @SuppressLint("CheckResult")
         @Override
         public void onStop() {
+            Observable.fromIterable(closedEvent)
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(stateBean -> {
 
+                    });
         }
 
         @Override
@@ -293,9 +296,15 @@ public class Blueprint {
         /**
          * 页面创建完成事件
          */
+        @SuppressLint("CheckResult")
         @Override
         public void onPrepare() {
+            Observable.fromIterable(createdEvent)
+                    .subscribeOn(Schedulers.newThread())
+                    .subscribeOn(AndroidSchedulers.mainThread())
+                    .subscribe(stateBean -> {
 
+                    });
         }
     }
 }

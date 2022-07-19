@@ -7,8 +7,10 @@ import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.VideoView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.krt.base.util.MUtil;
@@ -18,26 +20,28 @@ import com.krt.lego.oc.core.bean.BaseLayoutBean;
 import com.krt.lego.oc.core.bean.FixedBean;
 import com.krt.lego.oc.core.surface.BaseWidget;
 import com.krt.lego.oc.core.surface.Subgrade;
-import com.krt.lego.oc.imp.widget.ButtonView;
+import com.krt.lego.oc.imp.widget.ListView;
+import com.krt.lego.oc.imp.widget.basics.ButtonView;
 import com.krt.lego.oc.imp.widget.CircleProgressBarView;
 import com.krt.lego.oc.imp.widget.CountdownView;
-import com.krt.lego.oc.imp.widget.DefaultView;
-import com.krt.lego.oc.imp.widget.DrawMapView;
-import com.krt.lego.oc.imp.widget.InputView;
-import com.krt.lego.oc.imp.widget.LabelView;
+import com.krt.lego.oc.imp.widget.basics.DefaultView;
+import com.krt.lego.oc.imp.widget.basics.DrawMapView;
+import com.krt.lego.oc.imp.widget.basics.InputView;
+import com.krt.lego.oc.imp.widget.basics.LabelView;
 import com.krt.lego.oc.imp.widget.LayoutView;
 import com.krt.lego.oc.imp.widget.LineProgressBarView;
-import com.krt.lego.oc.imp.widget.MVideoView;
+import com.krt.lego.oc.imp.widget.basics.MVideoView;
 import com.krt.lego.oc.imp.widget.NavbarView;
-import com.krt.lego.oc.imp.widget.PicView;
+import com.krt.lego.oc.imp.widget.basics.PicView;
 import com.krt.lego.oc.imp.widget.RadioView;
 import com.krt.lego.oc.imp.widget.RatingBarView;
 import com.krt.lego.oc.imp.widget.RichTextView;
-import com.krt.lego.oc.imp.widget.ScorllLabelView;
+import com.krt.lego.oc.imp.widget.basics.ScorllLabelView;
 import com.krt.lego.oc.imp.widget.ScrollLayoutView;
 import com.krt.lego.oc.imp.widget.TabTitleView;
 import com.krt.lego.oc.imp.widget.TagView;
 import com.krt.lego.oc.imp.widget.WeatherView;
+import com.krt.lego.oc.util.TerminalUtil;
 import com.krt.lego.oc.variable.JsonValue;
 import com.krt.lego.oc.variable.ViewValue;
 
@@ -60,12 +64,13 @@ public class ModuleViewFactory {
 
     /**
      * 创建子组件
-     * @param list 子组件原型
+     *
+     * @param list     子组件原型
      * @param subgrade 公环境
-     * @param vg 父容器
-     * @param views 需要导出的子组件集合（容器组件的输出参数）
-     * @param isChild 是否属于列表子组件
-     * @param tag 如果是列表子组件，则附加对应数据
+     * @param vg       父容器
+     * @param views    需要导出的子组件集合（容器组件的输出参数）
+     * @param isChild  是否属于列表子组件
+     * @param tag      如果是列表子组件，则附加对应数据
      */
     public static void createViews(List<BaseLayoutBean> list, Subgrade subgrade,
                                    final ViewGroup vg, List<BaseWidget> views, boolean isChild, Object tag) {
@@ -95,9 +100,9 @@ public class ModuleViewFactory {
                 case ViewValue.LABEL:
                     baseView = new LabelView(subgrade, bean, isChild);
                     break;
-//                case ViewValue.LIST:
-//                    baseView = new ListDataView(subgrade, bean, isChild);
-//                    break;
+                case ViewValue.LIST:
+                    baseView = new ListView(subgrade, bean, isChild);
+                    break;
                 case ViewValue.BUTTON:
                     baseView = new ButtonView(subgrade, bean, isChild);
                     break;
@@ -180,6 +185,7 @@ public class ModuleViewFactory {
 
     /**
      * 非列表子组件，参数见上个方法
+     *
      * @param list
      * @param subgrade
      * @param vg
@@ -272,38 +278,45 @@ public class ModuleViewFactory {
             case "list": {
                 //列表页
                 //列表页仅有两个子节点，列表头和列表，筛选出列表，其余组件作为列表头
-                List<BaseLayoutBean> listDataView = new ArrayList<>();
+                List<BaseLayoutBean> listview = new ArrayList<>();
+                List<BaseLayoutBean> content = new ArrayList<>();
                 int list_index = -1;
 
-                for (int i = 0; i <  list.size(); i++) {
+                for (int i = 0; i < list.size(); i++) {
                     if (list.get(i).getType().equals(ViewValue.LIST)
                             || list.get(i).getType().equals(ViewValue.WATERFALL)
                             || list.get(i).getType().equals(ViewValue.MUITSTYLELIST)) {
-                        listDataView.add(list.get(i));
-                        list_index = i;
-                        break;
+
+                        JSONObject commonObj = JSON.parseObject(list.get(i).getCommon().toString());
+                        JSONArray commonArr = commonObj.getJSONArray("common");
+                        if (list_index == -1 && TerminalUtil.isAndroid(commonArr)) {
+                            listview.add(list.get(i));
+                            list_index = i;
+                        }
+                    } else {
+                        content.add(list.get(i));
                     }
                 }
 
                 List<BaseWidget> views = new ArrayList<>();
                 if (list_index == -1) {
                     //列表页不放列表？那就当普通页处理吧
-                    ModuleViewFactory.createViews(list, sub, contentView, views);
+                    ModuleViewFactory.createViews(content, sub, contentView, views, false, null);
                 } else {
-                    //list将作为列表头组件的集合，剔除list
-                    list.remove(list_index);
                     //创建列表
-                    ModuleViewFactory.createViews(listDataView, sub, contentView, views);
+                    ModuleViewFactory.createViews(listview, sub, contentView, views, false, null);
                     if (views.size() == 0) {
+                        //创建列表出现了问题
                         return;
                     }
                     BaseWidget recyclerViewBaseView = views.get(0);
                     //创建列表头
                     FrameLayout listHeaderView = new FrameLayout(sub.getCarrier());
-                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT);
+                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams
+                            (FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT);
                     listHeaderView.setLayoutParams(lp);
                     List<BaseWidget> headerViews = new ArrayList<>();
-                    ModuleViewFactory.createViews(list, sub, listHeaderView, headerViews);
+                    ModuleViewFactory.createViews(content, sub, listHeaderView, headerViews, false, null);
 //                    try {
 //                        ((BaseQuickAdapter)
 //                                ((MRecyclerView) recyclerViewBaseView.view).getAdapter())
@@ -315,8 +328,8 @@ public class ModuleViewFactory {
             }
             default: {
                 //默认普通页
-        List<BaseWidget> views = new ArrayList<>();
-        ModuleViewFactory.createViews(list, sub, contentView, views);
+                List<BaseWidget> views = new ArrayList<>();
+                ModuleViewFactory.createViews(list, sub, contentView, views, false, null);
                 break;
             }
         }

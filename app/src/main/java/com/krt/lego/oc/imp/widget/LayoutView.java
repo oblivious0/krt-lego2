@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * @author: MaGua
  * @create_on:2021/10/3 15:02
- * @description
+ * @description 容器组件
  */
 public class LayoutView extends BaseWidget<ShadowLayout> {
 

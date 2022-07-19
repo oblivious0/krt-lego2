@@ -22,7 +22,7 @@ import java.util.Optional;
 /**
  * @author: MaGua
  * @create_on:2021/10/20 10:06
- * @description
+ * @description 标题栏
  */
 public class NavbarView extends BaseWidget<LinearLayout> {
 

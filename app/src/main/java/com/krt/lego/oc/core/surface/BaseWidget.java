@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.blankj.utilcode.util.LogUtils;
 import com.jakewharton.rxbinding3.view.RxView;
 import com.krt.Lego;
+import com.krt.base.util.MUtil;
 import com.krt.base.util.ParseJsonUtil;
 import com.krt.lego.config.LegoConfig;
 import com.krt.lego.oc.core.bean.BaseLayoutBean;
@@ -28,7 +29,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * @author: MaGua
  * @create_on:2021/9/27 11:44
- * @description
+ * @description 图片组件
  */
 public abstract class BaseWidget<T extends View> {
     /**
@@ -113,13 +114,13 @@ public abstract class BaseWidget<T extends View> {
     protected void setViewPoi() {
 
         if (TextUtils.isEmpty(getStringVal("ftype"))) {
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(getIntVal("width"), getIntVal("height"));
-            lp.setMargins(getIntVal("x"), getIntVal("y"), 0, 0);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(MUtil.getRealValue(getSize("width")), getSize("height"));
+            lp.setMargins(getSize("x"), getSize("y"), 0, 0);
             view.setLayoutParams(lp);
         } else {
             RelativeLayout.LayoutParams lp =
-                    new RelativeLayout.LayoutParams(getIntVal("width"), getIntVal("height"));
-            lp.setMargins(getIntVal("x"), getIntVal("y"), getIntVal("r"), getIntVal("b"));
+                    new RelativeLayout.LayoutParams(getSize("width"), getSize("height"));
+            lp.setMargins(getSize("x"), getSize("y"), getSize("r"), getSize("b"));
             switch (getStringVal("ftype")) {
                 case "lt":
                     lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
@@ -156,7 +157,7 @@ public abstract class BaseWidget<T extends View> {
      *
      * @return
      */
-    protected boolean bindInNewThread(){
+    protected boolean bindInNewThread() {
         return true;
     }
 
@@ -164,7 +165,7 @@ public abstract class BaseWidget<T extends View> {
      * 当组件完成初始化操作之后需要执行的事件
      * 注意：此方法在bindInNewThread()完成之后执行，并且可被bindInNewThread()方法中断
      */
-    protected void bindInMainThread(){
+    protected void bindInMainThread() {
 
     }
 
@@ -205,6 +206,7 @@ public abstract class BaseWidget<T extends View> {
 
     /**
      * 匹配对应端的可执行事件
+     *
      * @return
      */
     public List<EventBean> matchingEvent() {
@@ -240,11 +242,21 @@ public abstract class BaseWidget<T extends View> {
         return val1;
     }
 
+    /**
+     * 获取String值属性
+     * @param attr
+     * @return
+     */
     protected String getStringVal(String attr) {
         Object obj = getAttr(attr);
         return obj != null ? obj.toString() : null;
     }
 
+    /**
+     * 获取Int值属性
+     * @param attr
+     * @return
+     */
     protected int getIntVal(String attr) {
         Object obj = getAttr(attr);
         if (obj == null) {
@@ -257,6 +269,20 @@ public abstract class BaseWidget<T extends View> {
         }
     }
 
+    /**
+     * 获取Int值属性，并转换成对应适配屏幕的尺寸
+     * @param attr
+     * @return
+     */
+    protected int getSize(String attr) {
+        return MUtil.getRealValue(getIntVal(attr));
+    }
+
+    /**
+     * 获取Float值属性
+     * @param attr
+     * @return
+     */
     protected float getFloatVal(String attr) {
         Object obj = getAttr(attr);
         if (obj == null) {
@@ -269,6 +295,11 @@ public abstract class BaseWidget<T extends View> {
         }
     }
 
+    /**
+     * 获取Double值属性
+     * @param attr
+     * @return
+     */
     protected double getDoubleVal(String attr) {
         Object obj = getAttr(attr);
         if (obj == null) {
@@ -281,6 +312,11 @@ public abstract class BaseWidget<T extends View> {
         }
     }
 
+    /**
+     * 获取布尔值属性
+     * @param attr
+     * @return
+     */
     protected boolean getBooleanVal(String attr) {
         Object obj = getAttr(attr);
         if (obj == null) {
@@ -289,6 +325,10 @@ public abstract class BaseWidget<T extends View> {
         return Boolean.parseBoolean(obj.toString());
     }
 
+    /**
+     * 获取附属的单位
+     * @return
+     */
     public Subgrade getDependent() {
         return subgrade;
     }

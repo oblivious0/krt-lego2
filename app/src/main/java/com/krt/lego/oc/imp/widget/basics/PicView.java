@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import android.annotation.SuppressLint;
 import android.text.TextUtils;
@@ -19,6 +19,7 @@ import com.krt.lego.oc.core.important.SkinManager;
 import com.krt.lego.oc.core.surface.Subgrade;
 import com.krt.lego.oc.util.CropUtil;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -27,7 +28,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 /**
  * @author: MaGua
  * @create_on:2021/10/3 10:51
- * @description
+ * @description 图片组件
  */
 public class PicView extends BaseWidget<ImageView> {
 
@@ -48,7 +49,7 @@ public class PicView extends BaseWidget<ImageView> {
     @Override
     protected void initView() {
         int radius = MUtil.getRealValue(getIntVal("borderRadius"));
-        switch (getStringVal("mode")) {
+        switch (Optional.ofNullable(getStringVal("mode")).orElse("")) {
             case "aspectFit":
                 view.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 break;

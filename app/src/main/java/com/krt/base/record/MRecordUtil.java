@@ -27,9 +27,9 @@ import com.krt.base.util.MPermissions;
 public class MRecordUtil {
     private MP3Recorder mRecorder;
 
-    private String path; //文件路径
+    private String path;
 
-    private File recordFile; //录音文件
+    private File recordFile;
 
     private FragmentActivity mActivity;
 
@@ -38,7 +38,7 @@ public class MRecordUtil {
 
     private AudioRecoderDialog recoderDialog;
 
-    private long startTime; //开始录制时间 为了计算dialog上显示的录制时间
+    private long startTime;
 
 
     /**

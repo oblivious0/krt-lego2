@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import android.graphics.drawable.GradientDrawable;
 import android.util.TypedValue;
@@ -17,7 +17,7 @@ import java.util.Optional;
 /**
  * @author: MaGua
  * @create_on:2021/10/20 9:30
- * @description
+ * @description 按钮组件
  */
 public class ButtonView extends BaseWidget<FrameLayout> {
 

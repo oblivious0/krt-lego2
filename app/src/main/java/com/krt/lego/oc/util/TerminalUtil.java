@@ -60,4 +60,9 @@ public class TerminalUtil {
         return true;
     }
 
+    public static boolean isAndroid(List terminalBeanList) {
+        if (terminalBeanList == null || terminalBeanList.size() == 0) return true;
+        return terminalBeanList.contains(Lego.getLegoInfo().terminal + "");
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -24,7 +24,7 @@ import java.util.Optional;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 9:40
- * @description
+ * @description 长文本滚动域组件
  */
 public class ScorllLabelView extends BaseWidget<TextView> {
 

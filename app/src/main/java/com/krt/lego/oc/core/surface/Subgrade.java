@@ -41,4 +41,10 @@ public interface Subgrade {
      * @return
      */
     <T extends View> T getSurfaceView(String nav);
+
+    /**
+     * 监听返回Code
+     * @param observer
+     */
+    void addResultCodeObserver (ResultCodeObserver observer);
 }

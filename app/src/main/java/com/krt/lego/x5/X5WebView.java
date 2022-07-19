@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import com.tencent.smtt.sdk.WebSettings;
@@ -18,7 +19,7 @@ import com.tencent.smtt.sdk.WebViewClient;
  * @description
  * @time 2018/11/3
  */
-public class X5WebView extends RelativeLayout {
+public class X5WebView extends FrameLayout {
 
     private Context mContext;
     public WebView mWebView;
@@ -41,18 +42,15 @@ public class X5WebView extends RelativeLayout {
         mWebView = new WebView(mContext);
         this.addView(mWebView, LayoutParams.MATCH_PARENT,
                 LayoutParams.MATCH_PARENT);
-        mWebView.setOnKeyListener(new OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                    if (keyCode == KeyEvent.KEYCODE_BACK
-                            && mWebView.canGoBack()) { // 表示按返回键时的操作
-                        mWebView.goBack(); // 后退
-                        return true; // 已处理
-                    }
+        mWebView.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_BACK
+                        && mWebView.canGoBack()) { // 表示按返回键时的操作
+                    mWebView.goBack(); // 后退
+                    return true; // 已处理
                 }
-                return false;
             }
+            return false;
         });
     }
 
@@ -61,8 +59,8 @@ public class X5WebView extends RelativeLayout {
         mWebView.setClickable(value);
     }
 
-    public WebSettings getSetting(){
-       return mWebView.getSettings();
+    public WebSettings getSetting() {
+        return mWebView.getSettings();
     }
 
     public void setWebViewClient(WebViewClient value) {

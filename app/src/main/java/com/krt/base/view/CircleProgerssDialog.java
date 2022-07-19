@@ -38,7 +38,7 @@ public class CircleProgerssDialog extends Dialog {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.layout_progressdialog);
         setCanceledOnTouchOutside(false);
-        dProgress = (DonutProgress) findViewById(R.id.donutprogress);
+        dProgress = findViewById(R.id.donutprogress);
         if (!TextUtils.isEmpty(content)) {
             ((TextView) findViewById(R.id.content)).setText(content);
         }

@@ -11,7 +11,7 @@ import com.krt.lego.oc.core.surface.Subgrade;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 14:30
- * @description
+ * @description 富文本组件
  */
 public class RichTextView extends BaseWidget<WebView> {
 

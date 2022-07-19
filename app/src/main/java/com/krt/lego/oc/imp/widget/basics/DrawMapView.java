@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import com.krt.lego.oc.core.bean.BaseLayoutBean;
 import com.krt.lego.oc.core.surface.BaseWidget;
@@ -8,7 +8,7 @@ import com.krt.lego.oc.imp.custom.MapView;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 11:19
- * @description
+ * @description 手绘图组件
  */
 public class DrawMapView extends BaseWidget<MapView> {
 

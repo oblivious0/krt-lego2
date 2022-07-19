@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import android.graphics.Color;
 import android.widget.TextView;

@@ -21,7 +21,7 @@ import com.krt.lego.oc.core.surface.Subgrade;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 9:26
- * @description
+ * @description 线型进度条
  */
 public class LineProgressBarView extends BaseWidget<FrameLayout> {
 

@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import android.text.InputType;
 import android.view.Gravity;
@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * @author: MaGua
  * @create_on:2021/10/9 11:37
- * @description
+ * @description 输入框组件
  */
 public class InputView extends BaseWidget<EditText> {
 

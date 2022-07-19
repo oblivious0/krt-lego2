@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -21,7 +21,7 @@ import com.krt.lego.oc.imp.custom.JustifyTextView;
 /**
  * @author: MaGua
  * @create_on:2021/10/3 9:16
- * @description
+ * @description 标签组件
  */
 public class LabelView extends BaseWidget<TextView> {
 

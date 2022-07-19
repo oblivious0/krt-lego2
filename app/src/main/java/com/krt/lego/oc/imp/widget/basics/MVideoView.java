@@ -1,4 +1,4 @@
-package com.krt.lego.oc.imp.widget;
+package com.krt.lego.oc.imp.widget.basics;
 
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -20,7 +20,7 @@ import java.util.Optional;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 10:44
- * @description
+ * @description 视频组件
  */
 public class MVideoView extends BaseWidget<FrameLayout> {
     private ImageView thump, playImg;

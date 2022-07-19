@@ -1,10 +1,12 @@
 package com.krt.lego.oc.imp.surface;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -13,6 +15,7 @@ import com.krt.lego.AppLibManager;
 import com.krt.lego.Constants;
 import com.krt.lego.R;
 import com.krt.lego.oc.core.surface.Blueprint;
+import com.krt.lego.oc.core.surface.ResultCodeObserver;
 import com.krt.lego.oc.core.surface.Subgrade;
 import com.krt.lego.oc.core.tools.BroadCastMessageWarp;
 import com.krt.lego.oc.lifecyler.MLifecycleObserver;
@@ -23,6 +26,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,6 +40,7 @@ public abstract class Buildings extends AppCompatActivity implements Subgrade {
     private Blueprint designer;
     private MLifecycleObserver mObserver;
     private String jsonFile;
+    private List<ResultCodeObserver> resultCodeObservers = new ArrayList<>();
 
     @Override
     public Context getCarrier() {
@@ -133,5 +139,18 @@ public abstract class Buildings extends AppCompatActivity implements Subgrade {
         OkGo.getInstance().cancelTag(this);
         AppLibManager.unRegisterContext(jsonFile);
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        for (ResultCodeObserver observer : resultCodeObservers){
+            observer.onActivityResult(requestCode, resultCode, data);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void addResultCodeObserver(ResultCodeObserver observer) {
+        this.resultCodeObservers.add(observer);
     }
 }

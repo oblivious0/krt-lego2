@@ -14,7 +14,7 @@ import static android.content.ContentValues.TAG;
 /**
  * @author: MaGua
  * @create_on:2021/11/10 14:54
- * @description
+ * @description 评星组件
  */
 public class RatingBarView extends BaseWidget<ScaleRatingBar> {
 

@@ -47,7 +47,7 @@ android {
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
             def fileName
-            if (project.IS_JENKINS.equals("ture")) {
+            if (project.IS_JENKINS.equals("true")) {
                 fileName = "${defaultConfig.applicationId}_JenkinsV${defaultConfig.versionName}_${buildTime()}.apk"
             } else {
                 fileName = "${defaultConfig.applicationId}_v${defaultConfig.versionName}_${millis()}.apk"
